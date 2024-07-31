@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColor.backGroundColor,
           primarySwatch: Colors.blue,
         ),
-        home: PaymentScreen(),
+        home: MyHomePage(),
       );
     });
   }

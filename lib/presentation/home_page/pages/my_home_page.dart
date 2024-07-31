@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_payment_app/component/colors.dart';
 import 'package:flutter_payment_app/component/utils/size_utils.dart';
+import 'package:flutter_payment_app/controllers/data_controller.dart';
 import 'package:flutter_payment_app/presentation/app_widgets/custom_buttons.dart';
 import 'package:flutter_payment_app/presentation/app_widgets/custom_large_button.dart';
 import 'package:flutter_payment_app/presentation/app_widgets/custom_sized_text.dart';
@@ -15,6 +16,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final DataController _homeController = Get.put(DataController());
   @override
   void initState() {
     // TODO: implement initState
@@ -24,22 +26,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(_homeController.list.toString());
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      body: Container(
-        height: Get.height,
-        width: Get.width,
-        child: Stack(
-          children: [
-            _headSection(),
-            _listBills(),
-            _payButton(),
-            _headerText_2(),
-            _headerText(),
-          ],
-        ),
-      ),
-    );
+        extendBodyBehindAppBar: true,
+        body: GetBuilder<DataController>(
+          builder: (GetxController controller) {
+            return Container(
+              height: Get.height,
+              width: Get.width,
+              child: Stack(
+                children: [
+                  _headSection(),
+                  _listBills(),
+                  _payButton(),
+                  _headerText_2(),
+                  _headerText(),
+                ],
+              ),
+            );
+          },
+        ));
   }
 
   Positioned _headSection() => Positioned(
@@ -179,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
         removeTop: true,
         context: context,
         child: ListView.builder(
-          itemCount: 5,
+          itemCount: _homeController.list.length,
           itemBuilder: (context, index) => Container(
             height: 150.adaptSize,
             margin: EdgeInsets.only(top: 10.v, left: 10.h, right: 15.h),
@@ -223,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "KenGen Power",
+                              _homeController.list[index]["brand"],
                               style: TextStyle(
                                 fontSize: 16.fSize,
                                 color: AppColor.mainColor,
@@ -243,7 +249,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     CustomSizedText(
-                        text: "Auto pay on 24th may 18", color: AppColor.green),
+                        text: _homeController.list[index]["more"],
+                        color: AppColor.green),
                     SizedBox(height: 5.v),
                   ],
                 ),
@@ -270,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Spacer(),
                         Text(
-                          "\$1248.00",
+                          _homeController.list[index]["due"],
                           style: TextStyle(
                             fontSize: 18.fSize,
                             fontWeight: FontWeight.w900,
